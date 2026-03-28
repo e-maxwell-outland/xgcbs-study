@@ -60,12 +60,12 @@ differs.
 | C | XG-CBS optimal segmentation |
 
 **Per trial** (after each plan):
-- Personal comprehension (1–7)
-- Decision confidence (1–7)
-- Explicability — "could you explain this to someone else?" (1–7)
+- Personal comprehension
+- Decision confidence
+- Explicability — "could you explain this to someone else?"
 
-**Per block** (after all trials in a condition):
-- Trust in Automation (TiA) — abbreviated 12-item version
+**Per block** (after all trials in a condition, order of conditions is counterbalanced):
+- Trust in Automation (TiA) — abbreviated 11-item version
 - System Causability Scale (SCS) — 10 items
 
 **Pre-study:** demographics, domain expertise, TiA Propensity to Trust subscale
