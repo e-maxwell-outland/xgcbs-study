@@ -42,12 +42,13 @@ body {
 /* ── Instruction screens ─────────────────────────────────── */
 
 .instructions {
-  max-width: 680px;
+  max-width: 720px;
   margin: 0 auto;
   text-align: left;
 }
 
-.instructions ul {
+.instructions ul,
+.instructions ol {
   padding-left: 1.4rem;
 }
 
@@ -58,6 +59,63 @@ body {
   margin: 1rem 0;
   font-size: 0.95rem;
   color: #555;
+}
+
+/* ── Scenario screen ─────────────────────────────────────── */
+
+.instructions.scenario h2 {
+  font-size: 1.3rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── Tutorial callout boxes ──────────────────────────────── */
+
+.tutorial-callout {
+  background: #f0f4ff;
+  border-left: 4px solid #1565c0;
+  border-radius: 0 4px 4px 0;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  font-size: 0.97rem;
+}
+
+/* Only the direct-child strong (the callout header) gets block display */
+.tutorial-callout > strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #0d47a1;
+}
+
+.tutorial-callout ul,
+.tutorial-callout ol {
+  margin: 0.3rem 0 0;
+  padding-left: 1.3rem;
+}
+
+.tutorial-callout p {
+  margin: 0.3rem 0 0;
+  font-size: 0.97rem;
+  color: #333;
+}
+
+/* Warning variant — overlapping arrows note */
+.tutorial-callout--warning {
+  background: #fff8e1;
+  border-left-color: #f9a825;
+}
+
+.tutorial-callout--warning > strong {
+  color: #e65100;
+}
+
+/* Arrow explanation variant */
+.tutorial-callout--arrow {
+  background: #fce4ec;
+  border-left-color: #c62828;
+}
+
+.tutorial-callout--arrow > strong {
+  color: #b71c1c;
 }
 
 /* ── Combined trial preamble (stimulus above questions) ──── */
@@ -243,4 +301,81 @@ body {
 
 .error-screen h2 {
   color: #c62828;
+}
+
+/* ── Mobile responsive ───────────────────────────────────── */
+
+@media (max-width: 600px) {
+
+  /* Content padding */
+  .jspsych-content {
+    padding: 1rem 0.75rem;
+  }
+
+  .instructions {
+    max-width: 100%;
+  }
+
+  /* Typography — slightly smaller on small screens */
+  .jspsych-content p,
+  .jspsych-content li {
+    font-size: 0.97rem;
+    line-height: 1.55;
+  }
+
+  .jspsych-content h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Video — cap height so it doesn't dominate the screen */
+  .video-container video {
+    max-height: 280px;
+  }
+
+  /* Carousel image */
+  .segment-img {
+    max-height: 280px;
+  }
+
+  /* Carousel nav — bigger touch targets */
+  .carousel-btn {
+    font-size: 1.6rem;
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+
+  /* Likert scale — keep all options on one row */
+  .jspsych-survey-likert-opts {
+    font-size: 0;          /* collapse whitespace between inline-block items */
+  }
+
+  .jspsych-survey-likert-opts li {
+    font-size: 0.72rem;
+    box-sizing: border-box; /* prevent padding from causing overflow */
+    padding: 0;
+  }
+
+  .jspsych-survey-likert-statement {
+    font-size: 0.95rem;
+  }
+
+  /* Submit button — full width for easy tapping */
+  .jspsych-btn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    margin-top: 1rem;
+  }
+
+  /* Tutorial callout boxes */
+  .tutorial-callout {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  /* Progress bar */
+  .progress-bar-outer {
+    margin-bottom: 1rem;
+  }
+
 }

@@ -64,22 +64,49 @@ function makeWelcomeTrial() {
         <h2>Welcome to the XG-CBS Study</h2>
         <p>Thank you for participating. This session will take approximately
         <strong>45–60 minutes</strong>.</p>
-        <p>In this study, you will view visualizations of plans made by teams
-        of autonomous robots navigating through grid environments. Each robot
-        is shown as a colored star and must reach its assigned goal.</p>
-        <p>You will view <strong>5 different environments</strong>, each with
-        a different multi-robot plan. You will do this <strong>3 times</strong>,
-        with plans shown in different visualization formats.</p>
-        <p>After each plan you will answer a few short questions, and after
-        each set of 5 plans you will complete two brief questionnaires.</p>
+        <p>You will view visualizations of robot navigation plans and answer
+        a few questions about each one. You will see plans presented in
+        <strong>3 different formats</strong>, each covering
+        <strong>5 warehouse environments</strong>.</p>
+        <p>After each set of 5 plans you will complete two brief
+        questionnaires (about 5 minutes total).</p>
         <div class="note">
           Please complete the study in one sitting without interruption, in a
-          quiet environment. If you need to pause, you can use your browser's
-          back button — your progress is saved within the page.
+          quiet environment. You may use a desktop, laptop, or mobile device.
         </div>
       </div>`,
-    choices: ['Begin'],
+    choices: ['Continue'],
     data: { trial_type: 'welcome' },
+  };
+}
+
+// ── Scenario framing ──────────────────────────────────────────────────────
+
+function makeScenarioTrial() {
+  return {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `
+      <div class="instructions scenario">
+        <h2>Your role</h2>
+        <p>Imagine you are a <strong>warehouse supervisor</strong>. Your
+        facility uses a team of autonomous robots to move goods from one
+        part of the warehouse to another.</p>
+        <p>Before each shift, the robots generate a coordinated movement
+        plan and ask you to <strong>review and approve it</strong> before
+        they execute it.</p>
+        <p>Every plan you will see in this study is
+        <strong>collision-free</strong> — no two robots will ever occupy
+        the same location at the same time. Your job is not to find
+        collisions, but to <strong>understand why the plan is safe</strong>
+        well enough that you could approve it with confidence and explain
+        it to a colleague if needed.</p>
+        <div class="note">
+          Think of yourself as the human-in-the-loop: the system has done
+          the work, and you are providing the final sign-off.
+        </div>
+      </div>`,
+    choices: ['I understand — show me the study'],
+    data: { trial_type: 'scenario' },
   };
 }
 
@@ -87,12 +114,14 @@ function makeWelcomeTrial() {
 
 function makeBlockInstructions(condition, blockNum) {
   const stimDesc = condition === 'A'
-    ? `<p>Each plan will be shown as a <strong>continuous animation</strong>.
-       You can watch the video and answer the questions on the same page —
-       pause or rewind as needed before submitting.</p>`
-    : `<p>Each plan will be shown as a <strong>slideshow of still images</strong>.
-       Use the arrow buttons to navigate forward and backward through the
-       segments, then answer the questions on the same page.</p>`;
+    ? `<p>In this part, each plan will be shown as a
+       <strong>continuous animation</strong>. You can watch the video and
+       answer the questions on the same page — pause or rewind as
+       needed before submitting.</p>`
+    : `<p>In this part, each plan will be shown as a
+       <strong>slideshow of still images</strong>. Use the arrow buttons
+       to navigate forward and backward through the segments, then answer
+       the questions on the same page.</p>`;
 
   return {
     type: jsPsychHtmlButtonResponse,
@@ -101,10 +130,11 @@ function makeBlockInstructions(condition, blockNum) {
         <h2>Part ${blockNum} of 3</h2>
         ${stimDesc}
         <ul>
-          <li>View all 5 environments in this part.</li>
-          <li>Answer three questions about each plan before moving on.</li>
-          <li>After all 5 plans, complete two short questionnaires
-              (about 5 minutes total).</li>
+          <li>Before the real environments start, you will complete a
+              short <strong>tutorial</strong> with a practice environment.</li>
+          <li>Then view <strong>5 warehouse environments</strong>, answering
+              three questions about each plan.</li>
+          <li>After all 5 plans, complete two short questionnaires.</li>
         </ul>
       </div>`,
     choices: [`Start Part ${blockNum}`],
@@ -112,15 +142,118 @@ function makeBlockInstructions(condition, blockNum) {
   };
 }
 
+// ── Tutorial instructions (condition-specific) ────────────────────────────
+
+function makeTutorialInstructions(condition) {
+  // Shared legend callout used by all conditions
+  const legendNote = `
+    <div class="tutorial-callout">
+      <strong>Reading the visualization:</strong>
+      <ul>
+        <li>Each <strong>colored circle ●</strong> is a robot at its
+            current (start) position.</li>
+        <li>Each <strong>colored star ★</strong> of the same color is
+            that robot's goal — where it needs to reach.</li>
+        <li>The grid cells shown in black are obstacles (walls).</li>
+      </ul>
+    </div>`;
+
+  const collisionNote = `
+    <div class="tutorial-callout tutorial-callout--warning">
+      <strong>Important — what collision-free means:</strong>
+      <p>No two robots will ever be in the same grid cell at the same
+      time step. Remember: you are not looking for collisions (there are
+      none) — you are trying to <em>understand why</em> the plan is safe.</p>
+    </div>`;
+
+  let formatNote;
+  if (condition === 'A') {
+    formatNote = `
+      <div class="tutorial-callout">
+        <strong>Using the animation:</strong>
+        <ul>
+          <li>Press <strong>▶ Play</strong> to watch all robots move
+              simultaneously to their goals.</li>
+          <li>Use the video controls to <strong>pause or rewind</strong>
+              at any point.</li>
+          <li>You do not need to watch the full video before answering —
+              pause and reflect whenever you're ready.</li>
+        </ul>
+      </div>`;
+  } else {
+    const arrowNote = `
+      <div class="tutorial-callout tutorial-callout--arrow">
+        <strong>What the arrows mean:</strong>
+        <p>Each arrow on a robot shows the <strong>direction it moved</strong>
+        during that time segment — from where it started the segment to
+        where it ended up.</p>
+        <p>⚠️ When arrows from different robots <strong>overlap or
+        cross</strong>, this does <em>not</em> mean they collide.
+        The robots passed through overlapping areas of the grid at
+        <strong>different times</strong>. The plan is still
+        collision-free — use the segments together to understand
+        the full picture.</p>
+      </div>`;
+
+    formatNote = `
+      ${arrowNote}
+      <div class="tutorial-callout">
+        <strong>Navigating the slideshow:</strong>
+        <ul>
+          <li>Use the <strong>‹ ›</strong> arrow buttons to move between
+              segments at your own pace.</li>
+          <li>You can go <strong>forwards and backwards</strong> freely
+              before answering.</li>
+          <li>Each segment covers a portion of the robots' journey —
+              together they show the full plan.</li>
+        </ul>
+      </div>`;
+  }
+
+  const questionsNote = `
+    <div class="tutorial-callout">
+      <strong>The three questions you'll answer after each plan:</strong>
+      <ol>
+        <li><em>How well do you personally understand why this plan is
+            collision-free?</em> — your own comprehension of the plan's
+            safety logic.</li>
+        <li><em>How confident are you in approving this plan for
+            execution?</em> — whether you'd sign off on it as supervisor.</li>
+        <li><em>How confident are you that you could explain this plan
+            to someone else?</em> — whether you understand it well enough
+            to communicate it.</li>
+      </ol>
+    </div>`;
+
+  return {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `
+      <div class="instructions">
+        <h2>Tutorial</h2>
+        <p>Before the real environments begin, work through this practice
+        environment to get familiar with the format. Your answers here
+        <strong>will not</strong> be included in the study data.</p>
+        ${legendNote}
+        ${collisionNote}
+        ${formatNote}
+        ${questionsNote}
+      </div>`,
+    choices: ['Start tutorial'],
+    data: { trial_type: 'tutorial_instructions', condition },
+  };
+}
+
 // ── Video + ratings trial (Condition A) ───────────────────────────────────
 // Video appears in the preamble above the three Likert questions.
+// isTutorial=true tags the data so it is excluded from the Qualtrics upload.
 
-function makeVideoRatingTrial(condition, envNum, src) {
+function makeVideoRatingTrial(condition, envNum, src, isTutorial = false) {
+  const label = isTutorial ? 'Tutorial environment' : `Environment ${envNum} of 5`;
   return {
     type: jsPsychSurveyLikert,
     preamble: `
       <div class="trial-preamble">
-        <p class="env-label">Environment ${envNum} of 5</p>
+        <p class="env-label">${label}</p>
         <div class="video-container">
           <video id="stim-video" controls>
             <source src="${src}" type="video/mp4">
@@ -132,8 +265,13 @@ function makeVideoRatingTrial(condition, envNum, src) {
       </div>
       <div class="stimulus-divider"></div>`,
     questions: TRIAL_RATING_QUESTIONS,
-    button_label: 'Submit',
-    data: { trial_type: 'ratings', condition, env: envNum, stimulus_type: 'video' },
+    button_label: isTutorial ? 'Submit (practice)' : 'Submit',
+    data: {
+      trial_type: isTutorial ? 'tutorial_ratings' : 'ratings',
+      condition,
+      env: envNum,
+      stimulus_type: 'video',
+    },
   };
 }
 
@@ -141,16 +279,18 @@ function makeVideoRatingTrial(condition, envNum, src) {
 // Image carousel appears in the preamble above the three Likert questions.
 // Carousel buttons use type="button" so they never accidentally submit the form.
 
-function makeCarouselRatingTrial(condition, envNum, dir, nSegs) {
+function makeCarouselRatingTrial(condition, envNum, dir, nSegs, isTutorial = false) {
   // Build src list so on_load closure can reference it
   const srcs = [];
   for (let i = 1; i <= nSegs; i++) srcs.push(`${dir}/seg_${i}.png`);
+
+  const label = isTutorial ? 'Tutorial environment' : `Environment ${envNum} of 5`;
 
   return {
     type: jsPsychSurveyLikert,
     preamble: `
       <div class="trial-preamble">
-        <p class="env-label">Environment ${envNum} of 5</p>
+        <p class="env-label">${label}</p>
         <div class="carousel">
           <div class="carousel-nav">
             <button type="button" class="carousel-btn" id="seg-prev" aria-label="Previous segment">&#8249;</button>
@@ -166,7 +306,7 @@ function makeCarouselRatingTrial(condition, envNum, dir, nSegs) {
       </div>
       <div class="stimulus-divider"></div>`,
     questions: TRIAL_RATING_QUESTIONS,
-    button_label: 'Submit',
+    button_label: isTutorial ? 'Submit (practice)' : 'Submit',
     on_load: function () {
       let current = 0;
       const img     = document.getElementById('seg-img');
@@ -190,7 +330,13 @@ function makeCarouselRatingTrial(condition, envNum, dir, nSegs) {
 
       update();
     },
-    data: { trial_type: 'ratings', condition, env: envNum, stimulus_type: 'segments', seg_total: nSegs },
+    data: {
+      trial_type: isTutorial ? 'tutorial_ratings' : 'ratings',
+      condition,
+      env: envNum,
+      stimulus_type: 'segments',
+      seg_total: nSegs,
+    },
   };
 }
 
@@ -267,7 +413,9 @@ function makeCompletionTrial() {
 function buildTimeline() {
   const timeline = [];
 
+  // Opening screens
   timeline.push(makeWelcomeTrial());
+  timeline.push(makeScenarioTrial());
 
   for (let blockIdx = 0; blockIdx < 3; blockIdx++) {
     const condition = conditionOrder[blockIdx];
@@ -281,15 +429,22 @@ function buildTimeline() {
 
     timeline.push(makeBlockInstructions(condition, blockNum));
 
-    // 5 environments — stimulus and ratings are on the same page
+    // Tutorial (env_6 — practice, data excluded from Qualtrics upload)
+    timeline.push(makeTutorialInstructions(condition));
+    const tut = condData.tutorial;
+    if (condData.type === 'video') {
+      timeline.push(makeVideoRatingTrial(condition, tut.env, tut.src, /* isTutorial */ true));
+    } else {
+      timeline.push(makeCarouselRatingTrial(condition, tut.env, tut.dir, tut.nSegs, /* isTutorial */ true));
+    }
+
+    // 5 real environments — stimulus and ratings on the same page
     for (let envIdx = 0; envIdx < condData.envs.length; envIdx++) {
       const envMeta = condData.envs[envIdx];
-      const envNum  = envMeta.env;
-
       if (condData.type === 'video') {
-        timeline.push(makeVideoRatingTrial(condition, envNum, envMeta.src));
+        timeline.push(makeVideoRatingTrial(condition, envMeta.env, envMeta.src));
       } else {
-        timeline.push(makeCarouselRatingTrial(condition, envNum, envMeta.dir, envMeta.nSegs));
+        timeline.push(makeCarouselRatingTrial(condition, envMeta.env, envMeta.dir, envMeta.nSegs));
       }
     }
 

@@ -17,19 +17,17 @@
 const LIKERT_5 = [
   'Strongly disagree',
   'Somewhat disagree',
-  'Neither agree nor disagree',
+  'Neither agree<br>nor<br>disagree',
   'Somewhat agree',
   'Strongly agree',
 ];
 
-const LIKERT_7 = ['1', '2', '3', '4', '5', '6', '7'];
-
-const LIKERT_7_ANCHORED = [
+const LIKERT_5_HOW = [
   '1<br><small>Not at all</small>',
-  '2', '3',
-  '4<br><small>Moderately</small>',
-  '5', '6',
-  '7<br><small>Completely</small>',
+  '2',
+  '3<br><small>Moderately</small>',
+  '4',
+  '5<br><small>Completely</small>',
 ];
 
 /* ── Per-trial ratings (3 items, 1–7) ──────────────────────────────────── */
@@ -37,19 +35,19 @@ const LIKERT_7_ANCHORED = [
 const TRIAL_RATING_QUESTIONS = [
   {
     prompt: 'How well do you personally understand why this plan is collision-free?',
-    labels: LIKERT_7_ANCHORED,
+    labels: LIKERT_5_HOW,
     name: 'comprehension',
     required: true,
   },
   {
     prompt: 'How confident are you in approving this plan for execution?',
-    labels: LIKERT_7_ANCHORED,
+    labels: LIKERT_5_HOW,
     name: 'confidence',
     required: true,
   },
   {
     prompt: 'How confident are you that you could explain this plan to someone else?',
-    labels: LIKERT_7_ANCHORED,
+    labels: LIKERT_5_HOW,
     name: 'explicability',
     required: true,
   },

@@ -8,6 +8,10 @@
  *   A — Full animated trajectory (MP4 video, one per environment)
  *   B — Fixed-interval segmentation (PNG images, naive baseline)
  *   C — XG-CBS optimal segmentation (PNG images, treatment)
+ *
+ * env_6 is a smaller tutorial environment used once per condition block.
+ * Its data is tagged trial_type:'tutorial_ratings' and excluded from
+ * the Qualtrics redirect URL at the end of the study.
  */
 
 'use strict';
@@ -16,6 +20,7 @@ const STIMULI = {
 
   A: {
     type: 'video',
+    tutorial: { env: 6, src: 'materials/figures/trajectories/env_6.mp4' },
     envs: [
       { env: 1, src: 'materials/figures/trajectories/env_1.mp4' },
       { env: 2, src: 'materials/figures/trajectories/env_2.mp4' },
@@ -27,6 +32,7 @@ const STIMULI = {
 
   B: {
     type: 'segments',
+    tutorial: { env: 6, nSegs: 4, dir: 'materials/figures/random_segments/env_6' },
     envs: [
       { env: 1, nSegs: 16, dir: 'materials/figures/random_segments/env_1' },
       { env: 2, nSegs: 14, dir: 'materials/figures/random_segments/env_2' },
@@ -38,6 +44,7 @@ const STIMULI = {
 
   C: {
     type: 'segments',
+    tutorial: { env: 6, nSegs: 2, dir: 'materials/figures/optimal_segments/env_6' },
     envs: [
       { env: 1, nSegs: 8, dir: 'materials/figures/optimal_segments/env_1' },
       { env: 2, nSegs: 7, dir: 'materials/figures/optimal_segments/env_2' },
