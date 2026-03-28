@@ -60,17 +60,38 @@ body {
   color: #555;
 }
 
-/* ── Video trial ─────────────────────────────────────────── */
+/* ── Combined trial preamble (stimulus above questions) ──── */
 
-.video-container {
+.trial-preamble {
   text-align: center;
-  margin: 0 auto;
+  margin-bottom: 0;
 }
 
-.video-container p.env-label {
+.env-label {
   font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 0 0 0.6rem;
+}
+
+.stimulus-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0.5rem 0 0;
+}
+
+/* Horizontal rule separating stimulus from Likert questions */
+.stimulus-divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 1.2rem 0 0.4rem;
+}
+
+/* ── Video (inline with questions) ───────────────────────── */
+
+.video-container {
   text-align: center;
 }
 
@@ -78,53 +99,79 @@ body {
   display: block;
   margin: 0 auto;
   max-width: 100%;
-  max-height: 520px;
+  max-height: 460px;
   border: 2px solid #ccc;
   border-radius: 4px;
   background: #000;
 }
 
-.video-hint {
-  font-size: 0.85rem;
-  color: #888;
-  margin-top: 0.5rem;
+/* ── Carousel (Conditions B and C) ──────────────────────── */
+
+.carousel {
+  display: inline-block;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* Navigation bar: ‹  1 / 7  › */
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-btn {
+  font-size: 2rem;
+  line-height: 1;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  /* Reset any inherited form-button styles */
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: #1565c0;
+  color: #fff;
+  border-color: #1565c0;
+}
+
+.carousel-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.carousel-counter {
+  font-size: 0.95rem;
+  color: #555;
+  min-width: 4rem;
   text-align: center;
 }
 
-/* ── Segment image trial ─────────────────────────────────── */
-
-.segment-display {
-  text-align: center;
-}
-
-.segment-counter {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 0.4rem;
+/* Image viewport */
+.carousel-viewport {
+  display: flex;
+  justify-content: center;
 }
 
 .segment-img {
   display: block;
-  margin: 0 auto;
   max-width: 100%;
-  max-height: 520px;
+  max-height: 460px;
   border: 2px solid #ccc;
   border-radius: 4px;
-}
-
-/* ── Environment intro ───────────────────────────────────── */
-
-.env-intro {
-  max-width: 620px;
-  margin: 2rem auto;
-  text-align: center;
-}
-
-.env-intro .env-number {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 0.3rem;
+  object-fit: contain;
 }
 
 /* ── Rating form (jsPsych survey-likert overrides) ───────── */

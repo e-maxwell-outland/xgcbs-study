@@ -41,8 +41,8 @@
  *   rA1, rA2, rA3, rA4, rA5,   (per-trial ratings: condition A, envs 1–5)
  *   rB1, rB2, rB3, rB4, rB5,
  *   rC1, rC2, rC3, rC4, rC5,
- *   tiaA, tiaB, tiaC,           (post-block TiA responses, comma-separated)
- *   scsA, scsB, scsC            (post-block SCS responses, comma-separated)
+ *   tiaA, tiaB, tiaC,           (post-block plan trust survey, 11 items, comma-separated)
+ *   scsA, scsB, scsC            (post-block presentation quality survey, 10 items, comma-separated)
  *
  * Each rating field (e.g. rA1) contains three comma-separated values:
  *   comprehension,confidence,explicability  (each 1–7)

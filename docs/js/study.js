@@ -88,11 +88,11 @@ function makeWelcomeTrial() {
 function makeBlockInstructions(condition, blockNum) {
   const stimDesc = condition === 'A'
     ? `<p>Each plan will be shown as a <strong>continuous animation</strong>.
-       Watch the full animation before proceeding — the Continue button will
-       become active when the video ends.</p>`
-    : `<p>Each plan will be shown as a <strong>series of still images</strong>,
-       one at a time. Click through all images at your own pace before
-       proceeding to the questions.</p>`;
+       You can watch the video and answer the questions on the same page —
+       pause or rewind as needed before submitting.</p>`
+    : `<p>Each plan will be shown as a <strong>slideshow of still images</strong>.
+       Use the arrow buttons to navigate forward and backward through the
+       segments, then answer the questions on the same page.</p>`;
 
   return {
     type: jsPsychHtmlButtonResponse,
@@ -102,7 +102,7 @@ function makeBlockInstructions(condition, blockNum) {
         ${stimDesc}
         <ul>
           <li>View all 5 environments in this part.</li>
-          <li>After each plan, rate your comprehension on three scales.</li>
+          <li>Answer three questions about each plan before moving on.</li>
           <li>After all 5 plans, complete two short questionnaires
               (about 5 minutes total).</li>
         </ul>
@@ -112,123 +112,112 @@ function makeBlockInstructions(condition, blockNum) {
   };
 }
 
-// ── Environment intro ─────────────────────────────────────────────────────
+// ── Video + ratings trial (Condition A) ───────────────────────────────────
+// Video appears in the preamble above the three Likert questions.
 
-function makeEnvIntro(envNum) {
-  return {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-      <div class="env-intro">
-        <div class="env-number">Environment ${envNum} of 5</div>
-        <p>View the plan below, then answer three questions about it.</p>
-      </div>`,
-    choices: ['View plan'],
-    data: { trial_type: 'env_intro', env: envNum },
-  };
-}
-
-// ── Video trial (Condition A) ─────────────────────────────────────────────
-
-function makeVideoTrial(condition, envNum, src) {
-  return {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-      <div class="video-container">
-        <p class="env-label">Environment ${envNum} of 5</p>
-        <video id="stim-video" controls width="700">
-          <source src="${src}" type="video/mp4">
-          <p>Your browser cannot play MP4 video. Please use Chrome, Firefox,
-             or Safari.</p>
-        </video>
-        <p class="video-hint">Watch the complete animation, then click Continue.</p>
-      </div>`,
-    choices: ['Continue'],
-    // Disable button until video ends
-    button_html: '<button class="jspsych-btn" id="video-continue-btn" disabled>%choice%</button>',
-    on_load: function () {
-      const video = document.getElementById('stim-video');
-      const btn   = document.getElementById('video-continue-btn');
-      video.addEventListener('ended', () => { btn.disabled = false; });
-      // Safety: also enable if participant watches ≥ 95% of the video
-      video.addEventListener('timeupdate', () => {
-        if (video.duration && video.currentTime / video.duration >= 0.95) {
-          btn.disabled = false;
-        }
-      });
-    },
-    data: { trial_type: 'stimulus', condition, env: envNum, stimulus_type: 'video' },
-  };
-}
-
-// ── Segment image trial (Conditions B and C) ──────────────────────────────
-
-function makeSegmentTrials(condition, envNum, dir, nSegs) {
-  const trials = [];
-  for (let seg = 1; seg <= nSegs; seg++) {
-    const isLast = seg === nSegs;
-    trials.push({
-      type: jsPsychHtmlButtonResponse,
-      stimulus: `
-        <div class="segment-display">
-          <p class="env-label">Environment ${envNum} of 5</p>
-          <p class="segment-counter">Segment ${seg} of ${nSegs}</p>
-          <img
-            src="${dir}/seg_${seg}.png"
-            class="segment-img"
-            alt="Segment ${seg} of ${nSegs} — environment ${envNum}"
-          >
-        </div>`,
-      choices: [isLast ? 'Continue to questions' : 'Next segment'],
-      data: {
-        trial_type: 'segment',
-        condition,
-        env: envNum,
-        seg_index: seg,
-        seg_total: nSegs,
-        is_last_seg: isLast,
-      },
-    });
-  }
-  return trials;
-}
-
-// ── Per-trial ratings (3 Likert items, 1–7) ───────────────────────────────
-
-function makeTrialRatings(condition, envNum) {
+function makeVideoRatingTrial(condition, envNum, src) {
   return {
     type: jsPsychSurveyLikert,
     preamble: `
-      <p><strong>Environment ${envNum} of 5 — Rate your understanding of the plan you just viewed.</strong></p>`,
+      <div class="trial-preamble">
+        <p class="env-label">Environment ${envNum} of 5</p>
+        <div class="video-container">
+          <video id="stim-video" controls>
+            <source src="${src}" type="video/mp4">
+            <p>Your browser cannot play MP4 video.
+               Please use Chrome, Firefox, or Safari.</p>
+          </video>
+        </div>
+        <p class="stimulus-hint">Watch the animation, then answer the questions below.</p>
+      </div>
+      <div class="stimulus-divider"></div>`,
     questions: TRIAL_RATING_QUESTIONS,
-    button_label: 'Next',
-    data: { trial_type: 'ratings', condition, env: envNum },
+    button_label: 'Submit',
+    data: { trial_type: 'ratings', condition, env: envNum, stimulus_type: 'video' },
   };
 }
 
-// ── Post-block TiA survey (12 items, 1–5) ────────────────────────────────
+// ── Carousel + ratings trial (Conditions B and C) ─────────────────────────
+// Image carousel appears in the preamble above the three Likert questions.
+// Carousel buttons use type="button" so they never accidentally submit the form.
+
+function makeCarouselRatingTrial(condition, envNum, dir, nSegs) {
+  // Build src list so on_load closure can reference it
+  const srcs = [];
+  for (let i = 1; i <= nSegs; i++) srcs.push(`${dir}/seg_${i}.png`);
+
+  return {
+    type: jsPsychSurveyLikert,
+    preamble: `
+      <div class="trial-preamble">
+        <p class="env-label">Environment ${envNum} of 5</p>
+        <div class="carousel">
+          <div class="carousel-nav">
+            <button type="button" class="carousel-btn" id="seg-prev" aria-label="Previous segment">&#8249;</button>
+            <span class="carousel-counter" id="seg-counter">1 / ${nSegs}</span>
+            <button type="button" class="carousel-btn" id="seg-next" aria-label="Next segment">&#8250;</button>
+          </div>
+          <div class="carousel-viewport">
+            <img id="seg-img" src="${srcs[0]}" class="segment-img"
+                 alt="Segment 1 of ${nSegs}, environment ${envNum}" />
+          </div>
+        </div>
+        <p class="stimulus-hint">Use the arrows to browse all ${nSegs} segments, then answer the questions below.</p>
+      </div>
+      <div class="stimulus-divider"></div>`,
+    questions: TRIAL_RATING_QUESTIONS,
+    button_label: 'Submit',
+    on_load: function () {
+      let current = 0;
+      const img     = document.getElementById('seg-img');
+      const counter = document.getElementById('seg-counter');
+      const prevBtn = document.getElementById('seg-prev');
+      const nextBtn = document.getElementById('seg-next');
+
+      // Preload all images so navigation feels instant
+      srcs.forEach((s) => { const im = new Image(); im.src = s; });
+
+      function update() {
+        img.src       = srcs[current];
+        img.alt       = `Segment ${current + 1} of ${nSegs}, environment ${envNum}`;
+        counter.textContent = `${current + 1} / ${nSegs}`;
+        prevBtn.disabled    = current === 0;
+        nextBtn.disabled    = current === nSegs - 1;
+      }
+
+      prevBtn.addEventListener('click', () => { if (current > 0)          { current--; update(); } });
+      nextBtn.addEventListener('click', () => { if (current < nSegs - 1)  { current++; update(); } });
+
+      update();
+    },
+    data: { trial_type: 'ratings', condition, env: envNum, stimulus_type: 'segments', seg_total: nSegs },
+  };
+}
+
+// ── Post-block survey Part 1 — Plan trust (11 items, 1–5) ────────────────
 
 function makeTiaSurvey(condition, blockNum) {
   return {
     type: jsPsychSurveyLikert,
     preamble: `
-      <p><strong>Part ${blockNum} — Trust questionnaire</strong></p>
-      <p>Please rate how much you agree with each statement about the
-      <em>visualization format you just experienced</em>.</p>`,
+      <p><strong>Questionnaire 1 of 2</strong></p>
+      <p>Please rate your agreement with the following statements about the
+      <em>robot plans</em> you just reviewed.</p>`,
     questions: TIA_POST_BLOCK_QUESTIONS,
     button_label: 'Next',
     data: { trial_type: 'tia', condition, block: blockNum },
   };
 }
 
-// ── Post-block SCS survey (10 items, 1–5) ────────────────────────────────
+// ── Post-block survey Part 2 — Presentation quality (10 items, 1–5) ──────
 
 function makeScsSurvey(condition, blockNum) {
   return {
     type: jsPsychSurveyLikert,
     preamble: `
-      <p><strong>Part ${blockNum} — Explanation quality questionnaire</strong></p>
-      <p>Please rate how much you agree with each statement about the
-      <em>visualization format you just experienced</em>.</p>`,
+      <p><strong>Questionnaire 2 of 2</strong></p>
+      <p>Please rate your agreement with the following statements about the
+      <em>format the plans were presented to you</em>.</p>`,
     questions: SCS_POST_BLOCK_QUESTIONS,
     button_label: 'Next',
     data: { trial_type: 'scs', condition, block: blockNum },
@@ -292,21 +281,16 @@ function buildTimeline() {
 
     timeline.push(makeBlockInstructions(condition, blockNum));
 
-    // 5 environments
+    // 5 environments — stimulus and ratings are on the same page
     for (let envIdx = 0; envIdx < condData.envs.length; envIdx++) {
       const envMeta = condData.envs[envIdx];
       const envNum  = envMeta.env;
 
-      timeline.push(makeEnvIntro(envNum));
-
       if (condData.type === 'video') {
-        timeline.push(makeVideoTrial(condition, envNum, envMeta.src));
+        timeline.push(makeVideoRatingTrial(condition, envNum, envMeta.src));
       } else {
-        // Push individual segment trials
-        timeline.push(...makeSegmentTrials(condition, envNum, envMeta.dir, envMeta.nSegs));
+        timeline.push(makeCarouselRatingTrial(condition, envNum, envMeta.dir, envMeta.nSegs));
       }
-
-      timeline.push(makeTrialRatings(condition, envNum));
     }
 
     timeline.push(makeTiaSurvey(condition, blockNum));
