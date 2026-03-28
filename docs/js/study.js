@@ -68,8 +68,8 @@ function makeWelcomeTrial() {
         a few questions about each one. You will see plans presented in
         <strong>3 different formats</strong>, each covering
         <strong>5 warehouse environments</strong>.</p>
-        <p>After each set of 5 plans you will complete two brief
-        questionnaires (about 5 minutes total).</p>
+        <p>After each set of 5 plans you will complete three brief
+        questionnaires (about 5–7 minutes total).</p>
         <div class="note">
           Please complete the study in one sitting without interruption, in a
           quiet environment. You may use a desktop, laptop, or mobile device.
@@ -346,7 +346,7 @@ function makeTiaSurvey(condition, blockNum) {
   return {
     type: jsPsychSurveyLikert,
     preamble: `
-      <p><strong>Questionnaire 1 of 2</strong></p>
+      <p><strong>Questionnaire 1 of 3</strong></p>
       <p>Please rate your agreement with the following statements about the
       <em>robot plans</em> you just reviewed.</p>`,
     questions: TIA_POST_BLOCK_QUESTIONS,
@@ -355,18 +355,33 @@ function makeTiaSurvey(condition, blockNum) {
   };
 }
 
-// ── Post-block survey Part 2 — Presentation quality (10 items, 1–5) ──────
+// ── Post-block survey Part 2 — Presentation quality (8 items, 1–5) ───────
 
 function makeScsSurvey(condition, blockNum) {
   return {
     type: jsPsychSurveyLikert,
     preamble: `
-      <p><strong>Questionnaire 2 of 2</strong></p>
+      <p><strong>Questionnaire 2 of 3</strong></p>
       <p>Please rate your agreement with the following statements about the
       <em>format the plans were presented to you</em>.</p>`,
     questions: SCS_POST_BLOCK_QUESTIONS,
     button_label: 'Next',
     data: { trial_type: 'scs', condition, block: blockNum },
+  };
+}
+
+// ── Post-block survey Part 3 — Workload / NASA-TLX (4 items, 1–5) ────────
+
+function makeNasaTlxSurvey(condition, blockNum) {
+  return {
+    type: jsPsychSurveyLikert,
+    preamble: `
+      <p><strong>Questionnaire 3 of 3</strong></p>
+      <p>Please rate the following aspects of your experience reviewing the
+      plans in this block.</p>`,
+    questions: NASA_TLX_QUESTIONS,
+    button_label: 'Next',
+    data: { trial_type: 'tlx', condition, block: blockNum },
   };
 }
 
@@ -450,6 +465,7 @@ function buildTimeline() {
 
     timeline.push(makeTiaSurvey(condition, blockNum));
     timeline.push(makeScsSurvey(condition, blockNum));
+    timeline.push(makeNasaTlxSurvey(condition, blockNum));
   }
 
   timeline.push(makeCompletionTrial());
@@ -484,9 +500,10 @@ function buildRedirectUrl() {
   const ratingNames  = TRIAL_RATING_QUESTIONS.map((q) => q.name);
   const tiaNames     = TIA_POST_BLOCK_QUESTIONS.map((q) => q.name);
   const scsNames     = SCS_POST_BLOCK_QUESTIONS.map((q) => q.name);
+  const tlxNames     = NASA_TLX_QUESTIONS.map((q) => q.name);
 
   for (const cond of ['A', 'B', 'C']) {
-    // Per-trial ratings
+    // Per-trial ratings (4 values: comprehension, confidence, explicability, workload)
     for (let env = 1; env <= 5; env++) {
       const trial = allData.filter({ trial_type: 'ratings', condition: cond, env }).values()[0];
       if (trial) {
@@ -494,16 +511,22 @@ function buildRedirectUrl() {
       }
     }
 
-    // Post-block TiA
+    // Post-block TiA (9 items)
     const tiaTrial = allData.filter({ trial_type: 'tia', condition: cond }).values()[0];
     if (tiaTrial) {
       params.set(`tia${cond}`, extractLikertValues(tiaTrial, tiaNames).join(','));
     }
 
-    // Post-block SCS
+    // Post-block SCS (8 items)
     const scsTrial = allData.filter({ trial_type: 'scs', condition: cond }).values()[0];
     if (scsTrial) {
       params.set(`scs${cond}`, extractLikertValues(scsTrial, scsNames).join(','));
+    }
+
+    // Post-block NASA-TLX (4 items)
+    const tlxTrial = allData.filter({ trial_type: 'tlx', condition: cond }).values()[0];
+    if (tlxTrial) {
+      params.set(`tlx${cond}`, extractLikertValues(tlxTrial, tlxNames).join(','));
     }
   }
 

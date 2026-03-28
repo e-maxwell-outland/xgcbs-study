@@ -41,12 +41,14 @@
  *   rA1, rA2, rA3, rA4, rA5,   (per-trial ratings: condition A, envs 1–5)
  *   rB1, rB2, rB3, rB4, rB5,
  *   rC1, rC2, rC3, rC4, rC5,
- *   tiaA, tiaB, tiaC,           (post-block plan trust survey, 11 items, comma-separated)
- *   scsA, scsB, scsC            (post-block presentation quality survey, 10 items, comma-separated)
+ *   tiaA, tiaB, tiaC,           (post-block TiA, 9 items, comma-separated)
+ *   scsA, scsB, scsC,           (post-block SCS, 8 items, comma-separated)
+ *   tlxA, tlxB, tlxC            (post-block NASA-TLX, 4 items, comma-separated)
  *
- * Each rating field (e.g. rA1) contains three comma-separated values:
- *   comprehension,confidence,explicability  (each 1–7)
- * Each tia/scs field contains comma-separated item responses (1–5).
+ * Each rating field (e.g. rA1) contains four comma-separated values:
+ *   comprehension,confidence,explicability,workload  (each 1–5)
+ * Each tia/scs/tlx field contains comma-separated item responses (1–5).
+ * Item order within each field matches the order in scales.js.
  * ==========================================================================
  */
 
