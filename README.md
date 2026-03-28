@@ -43,8 +43,8 @@ This pilot study asks two questions:
 1. **Does segmentation help at all?** Do people understand and trust a
    segmented plan better than a raw, unsegmented path visualization?
 2. **Does *optimal* segmentation matter?** Is XG-CBS's explanation-minimizing
-   segmentation more effective than a naive fixed-interval baseline that uses
-   the same number of segments but places them at arbitrary time boundaries?
+   segmentation more effective than a naive fixed-interval baseline that uses double
+   the number of segments and places them at arbitrary time boundaries?
 
 ---
 
