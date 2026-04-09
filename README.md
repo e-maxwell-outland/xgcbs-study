@@ -7,6 +7,8 @@ presentations.
 
 **Status:** Pilot (N = 12) · IRB pending
 
+**Live Website: https://e-maxwell-outland.github.io/xgcbs-study/**
+
 ---
 
 ## Background
