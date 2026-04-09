@@ -119,7 +119,7 @@ function makeScenarioTrial() {
 
 // ── Block instructions ────────────────────────────────────────────────────
 
-function makeBlockInstructions(condition, blockNum) {
+function makeBlockInstructions(condition, blockNum, blockLabel) {
   const stimDesc = condition === 'A'
     ? `<p>In this part, each plan will be shown as a
        <strong>continuous animation</strong>. You can watch the video and
@@ -134,24 +134,24 @@ function makeBlockInstructions(condition, blockNum) {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div class="instructions">
-        <h2>Part ${blockNum} of 3</h2>
+        <h2>Presentation ${blockLabel}</h2>
         ${stimDesc}
         <ul>
           <li>Before the real environments start, you will complete a
               short <strong>tutorial</strong> with a practice environment.</li>
           <li>Then view <strong>5 warehouse environments</strong>, answering
               three questions about each plan.</li>
-          <li>After all 5 plans, complete two short questionnaires.</li>
+          <li>After all 5 plans, complete three short questionnaires.</li>
         </ul>
       </div>`,
-    choices: [`Start Part ${blockNum}`],
+    choices: [`Start Presentation ${blockLabel}`],
     data: { trial_type: 'block_instructions', condition, block: blockNum },
   };
 }
 
 // ── Tutorial instructions (condition-specific) ────────────────────────────
 
-function makeTutorialInstructions(condition) {
+function makeTutorialInstructions(condition, blockLabel) {
   // Shared legend callout used by all conditions
   const legendNote = `
     <div class="tutorial-callout">
@@ -219,13 +219,14 @@ function makeTutorialInstructions(condition) {
 
   const questionsNote = `
     <div class="tutorial-callout">
-      <strong>The three statements you'll evaluate after each plan:</strong>
+      <strong>The statements you'll evaluate after each plan:</strong>
       <ol>
         <li><em>I personally understand why this plan is collision-free.</em> — your own comprehension of the plan's
             safety logic.</li>
         <li><em>I am confident in approving this plan for execution.</em> — whether you'd sign off on it as supervisor.</li>
-        <li><em>I am that I could explain this plan to someone else.</em> — whether you understand it well enough
-            to communicate it.</li>
+        <li><em>I am confident that I could explain this plan to someone else.</em> — whether you understand it well
+            enough to communicate it.</li>
+        <li><em>How much mental effort did you exert to understand this plan?</em> — your perceived cognitive effort.</li>
       </ol>
     </div>`;
 
@@ -233,7 +234,7 @@ function makeTutorialInstructions(condition) {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div class="instructions">
-        <h2>Tutorial</h2>
+        <h2>Presentation ${blockLabel} — Tutorial</h2>
         <p>Before the real environments begin, work through this practice
         environment to get familiar with the format. Your answers here
         <strong>will not</strong> be included in the study data.</p>
@@ -346,11 +347,11 @@ function makeCarouselRatingTrial(condition, envNum, dir, nSegs, isTutorial = fal
 
 // ── Post-block survey Part 1 — Plan trust (11 items, 1–5) ────────────────
 
-function makeTiaSurvey(condition, blockNum) {
+function makeTiaSurvey(condition, blockNum, blockLabel) {
   return {
     type: jsPsychSurveyLikert,
     preamble: `
-      <p><strong>Questionnaire 1 of 3</strong></p>
+      <p><strong>Presentation ${blockLabel} — Questionnaire 1 of 3</strong></p>
       <p>Please rate your agreement with the following statements about the
       <em>robot plans</em> you just reviewed.</p>`,
     questions: q(TIA_POST_BLOCK_QUESTIONS),
@@ -361,11 +362,11 @@ function makeTiaSurvey(condition, blockNum) {
 
 // ── Post-block survey Part 2 — Presentation quality (8 items, 1–5) ───────
 
-function makeScsSurvey(condition, blockNum) {
+function makeScsSurvey(condition, blockNum, blockLabel) {
   return {
     type: jsPsychSurveyLikert,
     preamble: `
-      <p><strong>Questionnaire 2 of 3</strong></p>
+      <p><strong>Presentation ${blockLabel} — Questionnaire 2 of 3</strong></p>
       <p>Please rate your agreement with the following statements about the
       <em>format the plans were presented to you</em>.</p>`,
     questions: q(SCS_POST_BLOCK_QUESTIONS),
@@ -376,11 +377,11 @@ function makeScsSurvey(condition, blockNum) {
 
 // ── Post-block survey Part 3 — Workload / NASA-TLX (4 items, 1–5) ────────
 
-function makeNasaTlxSurvey(condition, blockNum) {
+function makeNasaTlxSurvey(condition, blockNum, blockLabel) {
   return {
     type: jsPsychSurveyLikert,
     preamble: `
-      <p><strong>Questionnaire 3 of 3</strong></p>
+      <p><strong>Presentation ${blockLabel} — Questionnaire 3 of 3</strong></p>
       <p>Please rate the following aspects of your experience reviewing the
       plans in this block.</p>`,
     questions: q(NASA_TLX_QUESTIONS),
@@ -391,16 +392,17 @@ function makeNasaTlxSurvey(condition, blockNum) {
 
 // ── Between-block break ───────────────────────────────────────────────────
 
-function makeBreakTrial(blockNum) {
+function makeBreakTrial(blockNum, prevLabel, nextLabel) {
+  const remaining = 4 - blockNum;
   return {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div class="instructions">
-        <h2>Part ${blockNum - 1} complete</h2>
+        <h2>Presentation ${prevLabel} complete</h2>
         <p>Great work! Take a short break if you need one.</p>
-        <p>You have <strong>${4 - blockNum} part${4 - blockNum !== 1 ? 's' : ''} remaining</strong>.</p>
+        <p>You have <strong>${remaining} presentation${remaining !== 1 ? 's' : ''} remaining</strong>.</p>
       </div>`,
-    choices: ['Continue to Part ' + blockNum],
+    choices: [`Continue to Presentation ${nextLabel}`],
     data: { trial_type: 'break', before_block: blockNum },
   };
 }
@@ -436,20 +438,23 @@ function buildTimeline() {
   timeline.push(makeWelcomeTrial());
   timeline.push(makeScenarioTrial());
 
+  const LABELS = ['A', 'B', 'C'];
+
   for (let blockIdx = 0; blockIdx < 3; blockIdx++) {
-    const condition = conditionOrder[blockIdx];
-    const blockNum  = blockIdx + 1;
-    const condData  = STIMULI[condition];
+    const condition  = conditionOrder[blockIdx];
+    const blockNum   = blockIdx + 1;
+    const blockLabel = LABELS[blockIdx];   // participant-facing label (always A→B→C)
+    const condData   = STIMULI[condition];
 
     // Break screen between blocks (not before first)
     if (blockIdx > 0) {
-      timeline.push(makeBreakTrial(blockNum));
+      timeline.push(makeBreakTrial(blockNum, LABELS[blockIdx - 1], blockLabel));
     }
 
-    timeline.push(makeBlockInstructions(condition, blockNum));
+    timeline.push(makeBlockInstructions(condition, blockNum, blockLabel));
 
     // Tutorial (env_6 — practice, data excluded from Qualtrics upload)
-    timeline.push(makeTutorialInstructions(condition));
+    timeline.push(makeTutorialInstructions(condition, blockLabel));
     const tut = condData.tutorial;
     if (condData.type === 'video') {
       timeline.push(makeVideoRatingTrial(condition, tut.env, tut.src, /* isTutorial */ true));
@@ -467,9 +472,9 @@ function buildTimeline() {
       }
     }
 
-    timeline.push(makeTiaSurvey(condition, blockNum));
-    timeline.push(makeScsSurvey(condition, blockNum));
-    timeline.push(makeNasaTlxSurvey(condition, blockNum));
+    timeline.push(makeTiaSurvey(condition, blockNum, blockLabel));
+    timeline.push(makeScsSurvey(condition, blockNum, blockLabel));
+    timeline.push(makeNasaTlxSurvey(condition, blockNum, blockLabel));
   }
 
   timeline.push(makeCompletionTrial());

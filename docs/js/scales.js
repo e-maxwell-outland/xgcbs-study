@@ -60,7 +60,7 @@ const TRIAL_RATING_QUESTIONS = [
     required: true,
   },
   {
-    prompt: 'I am that I could explain this plan to someone else.',
+    prompt: 'I am confident that I could explain this plan to someone else.',
     labels: LIKERT_5,
     name: 'explicability',
     required: true,
