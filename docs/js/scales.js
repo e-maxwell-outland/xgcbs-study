@@ -48,19 +48,19 @@ const LIKERT_5_PERFORMANCE = [
 
 const TRIAL_RATING_QUESTIONS = [
   {
-    prompt: 'How well do you personally understand why this plan is collision-free?',
+    prompt: 'I personally understand why this plan is collision-free.',
     labels: LIKERT_5,
     name: 'comprehension',
     required: true,
   },
   {
-    prompt: 'How confident are you in approving this plan for execution?',
+    prompt: 'I am confident in approving this plan for execution.',
     labels: LIKERT_5,
     name: 'confidence',
     required: true,
   },
   {
-    prompt: 'How confident are you that you could explain this plan to someone else?',
+    prompt: 'I am that I could explain this plan to someone else.',
     labels: LIKERT_5,
     name: 'explicability',
     required: true,

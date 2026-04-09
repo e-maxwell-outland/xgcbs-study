@@ -212,15 +212,12 @@ function makeTutorialInstructions(condition) {
 
   const questionsNote = `
     <div class="tutorial-callout">
-      <strong>The three questions you'll answer after each plan:</strong>
+      <strong>The three statements you'll evaluate after each plan:</strong>
       <ol>
-        <li><em>How well do you personally understand why this plan is
-            collision-free?</em> — your own comprehension of the plan's
+        <li><em>I personally understand why this plan is collision-free.</em> — your own comprehension of the plan's
             safety logic.</li>
-        <li><em>How confident are you in approving this plan for
-            execution?</em> — whether you'd sign off on it as supervisor.</li>
-        <li><em>How confident are you that you could explain this plan
-            to someone else?</em> — whether you understand it well enough
+        <li><em>I am confident in approving this plan for execution.</em> — whether you'd sign off on it as supervisor.</li>
+        <li><em>I am that I could explain this plan to someone else.</em> — whether you understand it well enough
             to communicate it.</li>
       </ol>
     </div>`;
