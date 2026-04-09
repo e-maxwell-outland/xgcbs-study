@@ -54,6 +54,13 @@ const jsPsych = initJsPsych({
    Trial builders
    ============================================================ */
 
+// Returns questions with required:false when SKIP_REQUIRED is enabled.
+function q(questions) {
+  return CONFIG.SKIP_REQUIRED
+    ? questions.map((qs) => ({ ...qs, required: false }))
+    : questions;
+}
+
 // ── Welcome screen ────────────────────────────────────────────────────────
 
 function makeWelcomeTrial() {
@@ -261,7 +268,7 @@ function makeVideoRatingTrial(condition, envNum, src, isTutorial = false) {
         <p class="stimulus-hint">Watch the animation, then answer the questions below.</p>
       </div>
       <div class="stimulus-divider"></div>`,
-    questions: TRIAL_RATING_QUESTIONS,
+    questions: q(TRIAL_RATING_QUESTIONS),
     button_label: isTutorial ? 'Submit (practice)' : 'Submit',
     data: {
       trial_type: isTutorial ? 'tutorial_ratings' : 'ratings',
@@ -302,7 +309,7 @@ function makeCarouselRatingTrial(condition, envNum, dir, nSegs, isTutorial = fal
         <p class="stimulus-hint">Use the arrows to browse all ${nSegs} segments, then answer the questions below.</p>
       </div>
       <div class="stimulus-divider"></div>`,
-    questions: TRIAL_RATING_QUESTIONS,
+    questions: q(TRIAL_RATING_QUESTIONS),
     button_label: isTutorial ? 'Submit (practice)' : 'Submit',
     on_load: function () {
       let current = 0;
@@ -346,7 +353,7 @@ function makeTiaSurvey(condition, blockNum) {
       <p><strong>Questionnaire 1 of 3</strong></p>
       <p>Please rate your agreement with the following statements about the
       <em>robot plans</em> you just reviewed.</p>`,
-    questions: TIA_POST_BLOCK_QUESTIONS,
+    questions: q(TIA_POST_BLOCK_QUESTIONS),
     button_label: 'Next',
     data: { trial_type: 'tia', condition, block: blockNum },
   };
@@ -361,7 +368,7 @@ function makeScsSurvey(condition, blockNum) {
       <p><strong>Questionnaire 2 of 3</strong></p>
       <p>Please rate your agreement with the following statements about the
       <em>format the plans were presented to you</em>.</p>`,
-    questions: SCS_POST_BLOCK_QUESTIONS,
+    questions: q(SCS_POST_BLOCK_QUESTIONS),
     button_label: 'Next',
     data: { trial_type: 'scs', condition, block: blockNum },
   };
@@ -376,7 +383,7 @@ function makeNasaTlxSurvey(condition, blockNum) {
       <p><strong>Questionnaire 3 of 3</strong></p>
       <p>Please rate the following aspects of your experience reviewing the
       plans in this block.</p>`,
-    questions: NASA_TLX_QUESTIONS,
+    questions: q(NASA_TLX_QUESTIONS),
     button_label: 'Next',
     data: { trial_type: 'tlx', condition, block: blockNum },
   };

@@ -70,4 +70,12 @@ const CONFIG = {
    * redirecting to Qualtrics at the end, shows a JSON data dump.
    */
   TEST_MODE: true,
+
+  /**
+   * Set to true to skip required validation on all survey questions.
+   * Allows clicking Next/Submit without answering anything — useful for
+   * quickly stepping through the study during development.
+   * Always set to false before running participants.
+   */
+  SKIP_REQUIRED: false,
 };
