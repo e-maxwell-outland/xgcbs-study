@@ -34,7 +34,7 @@ finds the collision-free plan that achieves both low path cost *and* the
 fewest necessary segments, making the plan's structure as transparent as
 possible without sacrificing efficiency.
 
-The paper is included in this repository: [`paper/ICAPS-2022-Explainable_CBS.pdf`](paper/ICAPS-2022-Explainable_CBS.pdf)
+The paper is included in this repository: [`resources/ICAPS-2022-Explainable_CBS.pdf`](resources/ICAPS-2022-Explainable_CBS.pdf)
 
 ---
 
@@ -64,11 +64,13 @@ differs.
 **Per trial** (after each plan):
 - Personal comprehension
 - Decision confidence
-- Explicability — "could you explain this to someone else?"
+- Explicability
+- Workload
 
 **Per block** (after all trials in a condition, order of conditions is counterbalanced):
 - Trust in Automation (TiA) — abbreviated 11-item version
 - System Causability Scale (SCS) — 10 items
+-NASA-TLX - abbreviated 4-item version
 
 **Pre-study:** demographics, domain expertise, TiA Propensity to Trust subscale
 
