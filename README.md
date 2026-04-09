@@ -5,7 +5,7 @@ segmentation of multi-agent plans improves human comprehension, trust, and
 explicability judgments compared to unsegmented or naively segmented
 presentations.
 
-**Status:** Pilot (N = 12) · IRB pending`
+**Status:** Pilot (N = 12) · IRB pending
 
 **Live Website: https://e-maxwell-outland.github.io/xgcbs-study/**
 
