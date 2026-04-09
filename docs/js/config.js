@@ -77,5 +77,5 @@ const CONFIG = {
    * quickly stepping through the study during development.
    * Always set to false before running participants.
    */
-  SKIP_REQUIRED: false,
+  SKIP_REQUIRED: true,
 };
