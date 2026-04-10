@@ -61,14 +61,14 @@ const CONFIG = {
    * Example:
    *   'https://youruni.qualtrics.com/jfe/form/SV_XXXXXXXXX'
    */
-  QUALTRICS_POST_URL: 'YOUR_QUALTRICS_POST_STUDY_SURVEY_URL_HERE',
+  QUALTRICS_POST_URL: 'https://cuboulder.qualtrics.com/jfe/form/SV_1HUven85JzbuZTM',
 
   /**
    * Set to true during development/testing.
    * When true: uses order ABC regardless of URL params, and instead of
    * redirecting to Qualtrics at the end, shows a JSON data dump.
    */
-  TEST_MODE: true,
+  TEST_MODE: false,
 
   /**
    * Set to true to skip required validation on all survey questions.
@@ -76,5 +76,5 @@ const CONFIG = {
    * quickly stepping through the study during development.
    * Always set to false before running participants.
    */
-  SKIP_REQUIRED: true,
+  SKIP_REQUIRED: false,
 };
