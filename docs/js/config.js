@@ -14,14 +14,13 @@
  *   1. Add Embedded Data at the start of the flow:
  *        pid      = ${e://Field/ResponseID}
  *        condition_order = (set via Randomizer — see below)
- *   2. Add a Randomizer block with 6 branches (one per Latin square row):
+ *   2. Add a Randomizer block with 3 branches (one per Latin square row):
  *        Row 0 → condition_order = ABC
- *        Row 1 → condition_order = ACB
- *        Row 2 → condition_order = BAC
- *        Row 3 → condition_order = BCA
- *        Row 4 → condition_order = CAB
- *        Row 5 → condition_order = CBA
+ *        Row 1 → condition_order = BCA
+ *        Row 2 → condition_order = CAB
  *      Set the Randomizer to present exactly 1 branch per participant.
+ *      Enable "Evenly Present Elements" to balance across participants.
+ *      With N=12, target 4 participants per row.
  *   3. Add your survey blocks (consent, demographics, TiA propensity).
  *   4. End-of-Survey Options → Redirect to URL:
  *        https://YOUR-GITHUB-USERNAME.github.io/xgcbs-study/?pid=${e://Field/pid}&order=${e://Field/condition_order}

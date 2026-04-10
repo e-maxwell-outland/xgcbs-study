@@ -57,17 +57,15 @@ const STIMULI = {
 };
 
 /**
- * All 6 balanced orderings of conditions A, B, C (Latin square).
+ * 3-row balanced Latin square for conditions A, B, C.
+ * Each condition appears exactly once in each position (1st, 2nd, 3rd)
+ * across the 3 rows. With N=12, assign 4 participants per row.
  * Assignment is determined by the `order` URL parameter passed from Qualtrics.
- * Each participant is assigned one row in the Qualtrics randomizer.
  */
 const LATIN_SQUARE = [
   ['A', 'B', 'C'],  // row 0 — order=ABC
-  ['A', 'C', 'B'],  // row 1 — order=ACB
-  ['B', 'A', 'C'],  // row 2 — order=BAC
-  ['B', 'C', 'A'],  // row 3 — order=BCA
-  ['C', 'A', 'B'],  // row 4 — order=CAB
-  ['C', 'B', 'A'],  // row 5 — order=CBA
+  ['B', 'C', 'A'],  // row 1 — order=BCA
+  ['C', 'A', 'B'],  // row 2 — order=CAB
 ];
 
 /**
@@ -85,10 +83,10 @@ function parseConditionOrder(orderParam, pid) {
       return upper.split('');
     }
   }
-  // Deterministic fallback: hash pid into one of the 6 rows
+  // Deterministic fallback: hash pid into one of the 3 rows
   let hash = 0;
   for (let i = 0; i < pid.length; i++) {
-    hash = (hash * 31 + pid.charCodeAt(i)) % 6;
+    hash = (hash * 31 + pid.charCodeAt(i)) % 3;
   }
   return LATIN_SQUARE[Math.abs(hash)];
 }
