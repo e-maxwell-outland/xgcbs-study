@@ -44,6 +44,25 @@ const jsPsych = initJsPsych({
           <p style="font-family:sans-serif;color:#555">Full jsPsych data:</p>
           <pre style="background:#f5f5f5;padding:1rem;overflow-x:auto;">${JSON.stringify(jsPsych.data.get().values(), null, 2)}</pre>
         </div>`;
+    } else if (CONFIG.SHOW_REDIRECT_DEBUG) {
+      // Show redirect URL for inspection before proceeding — useful for
+      // diagnosing Qualtrics embedded-data capture issues.
+      document.body.innerHTML = `
+        <div style="max-width:860px;margin:3rem auto;font-family:sans-serif;padding:0 1rem;">
+          <h2>Debug — redirect URL</h2>
+          <p style="color:#555;font-size:0.9rem;">
+            Copy this URL and open it in a new tab to verify Qualtrics receives
+            the parameters. Check that all embedded-data fields are populated in
+            the Qualtrics response before turning off SHOW_REDIRECT_DEBUG.
+          </p>
+          <pre style="background:#f5f5f5;padding:1rem;font-size:0.75rem;overflow-x:auto;
+                      word-break:break-all;border:1px solid #ddd;border-radius:4px;">${redirectUrl}</pre>
+          <button onclick="window.location.href='${redirectUrl.replace(/'/g, "\\'")}'"
+                  style="margin-top:1.5rem;padding:0.75rem 2rem;font-size:1rem;
+                         background:#1a73e8;color:#fff;border:none;border-radius:4px;cursor:pointer;">
+            Proceed to Qualtrics survey →
+          </button>
+        </div>`;
     } else {
       window.location.href = redirectUrl;
     }

@@ -77,4 +77,12 @@ const CONFIG = {
    * Always set to false before running participants.
    */
   SKIP_REQUIRED: false,
+
+  /**
+   * Set to true to display the redirect URL and a "Proceed" button at the
+   * end of the study instead of auto-redirecting. Use this to inspect and
+   * manually test the exact URL sent to Qualtrics.
+   * Always set to false before running participants.
+   */
+  SHOW_REDIRECT_DEBUG: false,
 };
