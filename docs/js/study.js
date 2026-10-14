@@ -102,7 +102,7 @@ function makeWelcomeTrial() {
         </div>
       </div>`,
     choices: ['Continue'],
-    data: { trial_type: 'welcome' },
+    data: { task: 'welcome' },
   };
 }
 
@@ -132,7 +132,7 @@ function makeScenarioTrial() {
         </div>
       </div>`,
     choices: ['I understand — show me the study'],
-    data: { trial_type: 'scenario' },
+    data: { task: 'scenario' },
   };
 }
 
@@ -164,7 +164,7 @@ function makeBlockInstructions(condition, blockNum, blockLabel) {
         </ul>
       </div>`,
     choices: [`Start Presentation ${blockLabel}`],
-    data: { trial_type: 'block_instructions', condition, block: blockNum },
+    data: { task: 'block_instructions', condition, block: blockNum },
   };
 }
 
@@ -263,7 +263,7 @@ function makeTutorialInstructions(condition, blockLabel) {
         ${questionsNote}
       </div>`,
     choices: ['Start tutorial'],
-    data: { trial_type: 'tutorial_instructions', condition },
+    data: { task: 'tutorial_instructions', condition },
   };
 }
 
@@ -291,7 +291,7 @@ function makeVideoRatingTrial(condition, envNum, src, isTutorial = false) {
     questions: q(TRIAL_RATING_QUESTIONS),
     button_label: isTutorial ? 'Submit (practice)' : 'Submit',
     data: {
-      trial_type: isTutorial ? 'tutorial_ratings' : 'ratings',
+      task: isTutorial ? 'tutorial_ratings' : 'ratings',
       condition,
       env: envNum,
       stimulus_type: 'video',
@@ -355,7 +355,7 @@ function makeCarouselRatingTrial(condition, envNum, dir, nSegs, isTutorial = fal
       update();
     },
     data: {
-      trial_type: isTutorial ? 'tutorial_ratings' : 'ratings',
+      task: isTutorial ? 'tutorial_ratings' : 'ratings',
       condition,
       env: envNum,
       stimulus_type: 'segments',
@@ -375,7 +375,7 @@ function makeTiaSurvey(condition, blockNum, blockLabel) {
       <em>robot plans</em> you just reviewed.</p>`,
     questions: q(TIA_POST_BLOCK_QUESTIONS),
     button_label: 'Next',
-    data: { trial_type: 'tia', condition, block: blockNum },
+    data: { task: 'tia', condition, block: blockNum },
   };
 }
 
@@ -390,7 +390,7 @@ function makeScsSurvey(condition, blockNum, blockLabel) {
       <em>format the plans were presented to you</em>.</p>`,
     questions: q(SCS_POST_BLOCK_QUESTIONS),
     button_label: 'Next',
-    data: { trial_type: 'scs', condition, block: blockNum },
+    data: { task: 'scs', condition, block: blockNum },
   };
 }
 
@@ -405,7 +405,7 @@ function makeNasaTlxSurvey(condition, blockNum, blockLabel) {
       plans in this block.</p>`,
     questions: q(NASA_TLX_QUESTIONS),
     button_label: 'Next',
-    data: { trial_type: 'tlx', condition, block: blockNum },
+    data: { task: 'tlx', condition, block: blockNum },
   };
 }
 
@@ -422,7 +422,7 @@ function makeBreakTrial(blockNum, prevLabel, nextLabel) {
         <p>You have <strong>${remaining} presentation${remaining !== 1 ? 's' : ''} remaining</strong>.</p>
       </div>`,
     choices: [`Continue to Presentation ${nextLabel}`],
-    data: { trial_type: 'break', before_block: blockNum },
+    data: { task: 'break', before_block: blockNum },
   };
 }
 
@@ -442,7 +442,7 @@ function makeCompletionTrial() {
         </div>
       </div>`,
     choices: ['Submit and continue to final survey'],
-    data: { trial_type: 'completion' },
+    data: { task: 'completion' },
   };
 }
 
@@ -533,26 +533,26 @@ function buildRedirectUrl() {
   for (const cond of ['A', 'B', 'C']) {
     // Per-trial ratings (4 values: comprehension, confidence, explicability, workload)
     for (let env = 1; env <= 5; env++) {
-      const trial = allData.filter({ trial_type: 'ratings', condition: cond, env }).values()[0];
+      const trial = allData.filter({ task: 'ratings', condition: cond, env }).values()[0];
       if (trial) {
         params.set(`r${cond}${env}`, extractLikertValues(trial, ratingNames).join(','));
       }
     }
 
     // Post-block TiA (9 items)
-    const tiaTrial = allData.filter({ trial_type: 'tia', condition: cond }).values()[0];
+    const tiaTrial = allData.filter({ task: 'tia', condition: cond }).values()[0];
     if (tiaTrial) {
       params.set(`tia${cond}`, extractLikertValues(tiaTrial, tiaNames).join(','));
     }
 
     // Post-block SCS (8 items)
-    const scsTrial = allData.filter({ trial_type: 'scs', condition: cond }).values()[0];
+    const scsTrial = allData.filter({ task: 'scs', condition: cond }).values()[0];
     if (scsTrial) {
       params.set(`scs${cond}`, extractLikertValues(scsTrial, scsNames).join(','));
     }
 
     // Post-block NASA-TLX (4 items)
-    const tlxTrial = allData.filter({ trial_type: 'tlx', condition: cond }).values()[0];
+    const tlxTrial = allData.filter({ task: 'tlx', condition: cond }).values()[0];
     if (tlxTrial) {
       params.set(`tlx${cond}`, extractLikertValues(tlxTrial, tlxNames).join(','));
     }

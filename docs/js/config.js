@@ -12,7 +12,6 @@
  * ── Pre-study survey (Survey 1) ───────────────────────────────────────────
  * Survey flow:
  *   1. Add Embedded Data at the start of the flow:
- *        pid      = ${e://Field/ResponseID}
  *        condition_order = (set via Randomizer — see below)
  *   2. Add a Randomizer block with 3 branches (one per Latin square row):
  *        Row 0 → condition_order = ABC
@@ -23,8 +22,7 @@
  *      With N=12, target 4 participants per row.
  *   3. Add your survey blocks (consent, demographics, TiA propensity).
  *   4. End-of-Survey Options → Redirect to URL:
- *        https://YOUR-GITHUB-USERNAME.github.io/xgcbs-study/?pid=${e://Field/pid}&order=${e://Field/condition_order}
- *      (Replace with your actual GitHub Pages URL once enabled.)
+ *        https://e-maxwell-outland.github.io/xgcbs-study/?pid=${e://Field/ResponseID}&order=${e://Field/condition_order}
  *
  * ── Post-study survey (Survey 2) ──────────────────────────────────────────
  * Survey flow:
@@ -68,7 +66,7 @@ const CONFIG = {
    * When true: uses order ABC regardless of URL params, and instead of
    * redirecting to Qualtrics at the end, shows a JSON data dump.
    */
-  TEST_MODE: true,
+  TEST_MODE: false,
 
   /**
    * Set to true to skip required validation on all survey questions.
@@ -76,7 +74,7 @@ const CONFIG = {
    * quickly stepping through the study during development.
    * Always set to false before running participants.
    */
-  SKIP_REQUIRED: true,
+  SKIP_REQUIRED: false,
 
   /**
    * Set to true to display the redirect URL and a "Proceed" button at the
