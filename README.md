@@ -68,13 +68,13 @@ differs.
 - Workload
 
 **Per block** (after all trials in a condition, order of conditions is counterbalanced):
-- Trust in Automation (TiA) — abbreviated 11-item version
-- System Causability Scale (SCS) — 10 items
--NASA-TLX - abbreviated 4-item version
+- Trust in Automation (TiA) — abbreviated 9-item version
+- System Causability Scale (SCS) — abbbreviated 8-item version
+- NASA-TLX - abbreviated 4-item version
 
-**Pre-study:** demographics, domain expertise, TiA Propensity to Trust subscale
+**Pre-study:** consent, TiA Propensity to Trust subscale
 
-**Post-study:** forced-choice preference, open-text feedback
+**Post-study:** forced-choice preference, open-text feedback, demographics and domain expertise
 
 ---
 

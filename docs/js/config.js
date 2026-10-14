@@ -68,7 +68,7 @@ const CONFIG = {
    * When true: uses order ABC regardless of URL params, and instead of
    * redirecting to Qualtrics at the end, shows a JSON data dump.
    */
-  TEST_MODE: false,
+  TEST_MODE: true,
 
   /**
    * Set to true to skip required validation on all survey questions.
@@ -76,7 +76,7 @@ const CONFIG = {
    * quickly stepping through the study during development.
    * Always set to false before running participants.
    */
-  SKIP_REQUIRED: false,
+  SKIP_REQUIRED: true,
 
   /**
    * Set to true to display the redirect URL and a "Proceed" button at the
@@ -84,5 +84,5 @@ const CONFIG = {
    * manually test the exact URL sent to Qualtrics.
    * Always set to false before running participants.
    */
-  SHOW_REDIRECT_DEBUG: false,
+  SHOW_REDIRECT_DEBUG: true
 };
