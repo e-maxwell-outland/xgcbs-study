@@ -82,5 +82,5 @@ const CONFIG = {
    * manually test the exact URL sent to Qualtrics.
    * Always set to false before running participants.
    */
-  SHOW_REDIRECT_DEBUG: true
+  SHOW_REDIRECT_DEBUG: false
 };
